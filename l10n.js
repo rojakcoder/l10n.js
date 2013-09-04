@@ -135,7 +135,7 @@
             return operand1 >= operand2;
         },
         opMod = function (operand1, operand2) {
-            return operand1 % operand2;
+            return (operand1 % operand2) === 0;
         },
         opAnd = function (operand1, operand2) {
             return operand1 && operand2;
@@ -174,7 +174,7 @@
          * and second cell should be "cats".
          */
         parsePlural = function (pluralForms, cardinality) {
-            var re = /^nplurals=[0-9];\s*plural=\(([n!=0-9]*)\)/i,
+            var re = /^nplurals=[0-9];\s*plural=\(([n!=><%0-9]*)\)/i,
                 plural,
                 result = re.exec(pluralForms);
             //get the part of the evaluation and determine
@@ -222,7 +222,8 @@
                 if (localizations[locale]) {
                     pluralForms = localizations[locale]['&plural-forms'];
                     if (pluralForms) {
-                        if (!cardinality || pluralForms.indexOf('nplurals=1') !== -1) {
+                        if (cardinality === null || cardinality === undefined ||
+                                pluralForms.indexOf('nplurals=1') !== -1) {
                             //i.e. nplurals=1, use [0]
                             plural = getPlural(localizations[locale], 0, this_val);
                             return plural.replace('__n__', cardinality);

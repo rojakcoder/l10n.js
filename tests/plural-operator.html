@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>One Locale Test</title>
+    <link rel="stylesheet" href="qunit.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="../l10n.js"></script>
+    <script src="qunit.js"></script>
+</body>
+<script>
+var phrase1  = "%phrase1",      //in non-plural form only
+    e1singular = 'There is a bear in the zoo.',
+    e1plural = 'There are many bears in the zoo.',
+    e1few = 'There are a few bears in the zoo.',
+    e1many = 'There are many, many bears in the zoo.',
+    e1dozen = 'There are dozens of bears in the zoo.',
+    e1quite = 'There are quite a number of bears in the zoo.';
+
+test('Inequality test', function () {
+    //initiate 1 locale
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n!=1)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are many bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There is a bear in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1plural,
+        'NULL: Translated as "' + e1plural + '" because plural form is default.');
+    equal(phrase1.toLocaleString(0), e1plural,
+        '0: Translated as "' + e1plural + '".');
+    equal(phrase1.toLocaleString(1), e1singular,
+        '1: Translated as "' + e1singular + '".');
+    equal(phrase1.toLocaleString(2), e1plural,
+        '2: Translated as "' + e1plural + '".');
+});
+
+test('Equality test - singular form is default', function () {
+    //initiate 1 locale
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n==1)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There is a bear in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are many bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1singular,
+        'NULL: Translated as "' + e1singular + '" because singular form is default.');
+    equal(phrase1.toLocaleString(0), e1plural,
+        '0: Translated as "' + e1plural + '".');
+    equal(phrase1.toLocaleString(1), e1singular,
+        '1: Translated as "' + e1singular + '".');
+    equal(phrase1.toLocaleString(2), e1plural,
+        '2: Translated as "' + e1plural + '".');
+});
+
+test('Lesser than test', function () {
+    //initiate 1 locale
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n<5)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are a few bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are many, many bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1few,
+        'NULL: Translated as "' + e1few + '" because of default.');
+    equal(phrase1.toLocaleString(0), e1few,
+        '0: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(1), e1few,
+        '1: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(2), e1few,
+        '2: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(4), e1few,
+        '4: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(5), e1many,
+        '5: Translated as "' + e1many + '".');
+    equal(phrase1.toLocaleString(6), e1many,
+        '6: Translated as "' + e1many + '".');
+});
+
+test('Lesser than, equal to test', function () {
+    //initiate 1 locale
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n<=5)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are a few bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are many, many bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1few,
+        'NULL: Translated as "' + e1few + '" because of default.');
+    equal(phrase1.toLocaleString(0), e1few,
+        '0: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(1), e1few,
+        '1: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(2), e1few,
+        '2: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(4), e1few,
+        '4: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(5), e1few,
+        '5: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(6), e1many,
+        '6: Translated as "' + e1many + '".');
+});
+
+test('More than test', function () {
+    //initiate 1 locale
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n>5)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are many, many bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are a few bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1many,
+        'NULL: Translated as "' + e1many + '" because of default.');
+    equal(phrase1.toLocaleString(0), e1few,
+        '0: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(1), e1few,
+        '1: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(2), e1few,
+        '2: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(4), e1few,
+        '4: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(5), e1few,
+        '5: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(6), e1many,
+        '6: Translated as "' + e1many + '".');
+});
+
+test('Lesser than, equal to test', function () {
+    //initiate 1 locale
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n>=5)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are many, many bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are a few bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1many,
+        'NULL: Translated as "' + e1many + '" because of default.');
+    equal(phrase1.toLocaleString(0), e1few,
+        '0: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(1), e1few,
+        '1: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(2), e1few,
+        '2: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(4), e1few,
+        '4: Translated as "' + e1few + '".');
+    equal(phrase1.toLocaleString(5), e1many,
+        '5: Translated as "' + e1many + '".');
+    equal(phrase1.toLocaleString(6), e1many,
+        '6: Translated as "' + e1many + '".');
+});
+
+test('Mod test', function () {
+    //initiate 1 locale
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n%12)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are dozens of bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are quite a number of bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1dozen,
+        'NULL: Translated as "' + e1dozen + '" because of default.');
+    equal(phrase1.toLocaleString(0), e1dozen,
+        '0: Translated as "' + e1dozen + '".');
+    equal(phrase1.toLocaleString(1), e1quite,
+        '1: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(2), e1quite,
+        '2: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(11), e1quite,
+        '11: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(12), e1dozen,
+        '12: Translated as "' + e1dozen + '".');
+    equal(phrase1.toLocaleString(13), e1quite,
+        '13: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(24), e1dozen,
+        '24: Translated as "' + e1dozen + '".');
+});
+</script>
+</html>
+
