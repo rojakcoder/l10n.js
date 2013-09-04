@@ -21,7 +21,6 @@ var phrase1  = "%phrase1",      //in non-plural form only
     e1quite = 'There are quite a number of bears in the zoo.';
 
 test('Inequality test', function () {
-    //initiate 1 locale
     String.toLocaleString({
         'en': {
             '&plural-forms': 'nplurals=2; plural=(n!=1)',
@@ -48,7 +47,6 @@ test('Inequality test', function () {
 });
 
 test('Equality test - singular form is default', function () {
-    //initiate 1 locale
     String.toLocaleString({
         'en': {
             '&plural-forms': 'nplurals=2; plural=(n==1)',
@@ -75,7 +73,6 @@ test('Equality test - singular form is default', function () {
 });
 
 test('Lesser than test', function () {
-    //initiate 1 locale
     String.toLocaleString({
         'en': {
             '&plural-forms': 'nplurals=2; plural=(n<5)',
@@ -108,7 +105,6 @@ test('Lesser than test', function () {
 });
 
 test('Lesser than, equal to test', function () {
-    //initiate 1 locale
     String.toLocaleString({
         'en': {
             '&plural-forms': 'nplurals=2; plural=(n<=5)',
@@ -141,7 +137,6 @@ test('Lesser than, equal to test', function () {
 });
 
 test('More than test', function () {
-    //initiate 1 locale
     String.toLocaleString({
         'en': {
             '&plural-forms': 'nplurals=2; plural=(n>5)',
@@ -174,7 +169,6 @@ test('More than test', function () {
 });
 
 test('Lesser than, equal to test', function () {
-    //initiate 1 locale
     String.toLocaleString({
         'en': {
             '&plural-forms': 'nplurals=2; plural=(n>=5)',
@@ -207,10 +201,9 @@ test('Lesser than, equal to test', function () {
 });
 
 test('Mod test', function () {
-    //initiate 1 locale
     String.toLocaleString({
         'en': {
-            '&plural-forms': 'nplurals=2; plural=(n%12)',
+            '&plural-forms': 'nplurals=2; plural=(n%12==0)',
             '&plurals': [
                 {
                     '%phrase1': 'There are dozens of bears in the zoo.'
@@ -227,6 +220,40 @@ test('Mod test', function () {
         'NULL: Translated as "' + e1dozen + '" because of default.');
     equal(phrase1.toLocaleString(0), e1dozen,
         '0: Translated as "' + e1dozen + '".');
+    equal(phrase1.toLocaleString(1), e1quite,
+        '1: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(2), e1quite,
+        '2: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(11), e1quite,
+        '11: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(12), e1dozen,
+        '12: Translated as "' + e1dozen + '".');
+    equal(phrase1.toLocaleString(13), e1quite,
+        '13: Translated as "' + e1quite + '".');
+    equal(phrase1.toLocaleString(24), e1dozen,
+        '24: Translated as "' + e1dozen + '".');
+});
+
+test('Mod test with special treatment of 0', function () {
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n%12==0 && n!=0)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are dozens of bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are quite a number of bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.defaultLocale = 'en';
+
+    equal(phrase1.toLocaleString(), e1dozen,
+        'NULL: Translated as "' + e1dozen + '" because of default.');
+    equal(phrase1.toLocaleString(0), e1quite,
+        '0: Translated as "' + e1quite + '".');
     equal(phrase1.toLocaleString(1), e1quite,
         '1: Translated as "' + e1quite + '".');
     equal(phrase1.toLocaleString(2), e1quite,

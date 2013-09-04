@@ -9,7 +9,7 @@
  */
 
 /*global XMLHttpRequest, setTimeout, document, navigator, ActiveXObject*/
-/*jslint plusplus: true, continue: true*/
+/*jslint plusplus: true, continue: true, evil: true*/
 (function () {
     "use strict";
 
@@ -115,56 +115,6 @@
             delete load_queues[locale];
         },
         use_default,
-        opDetect = /n(==|!=|<|>|<=|>=|%|&&|\|\|)([0-9]+)/i,
-        opEqual = function (operand1, operand2) {
-            return operand1 === operand2;
-        },
-        opNotEqual = function (operand1, operand2) {
-            return operand1 !== operand2;
-        },
-        opLesser = function (operand1, operand2) {
-            return operand1 < operand2;
-        },
-        opGreater = function (operand1, operand2) {
-            return operand1 > operand2;
-        },
-        opLesserEqual = function (operand1, operand2) {
-            return operand1 <= operand2;
-        },
-        opGreaterEqual = function (operand1, operand2) {
-            return operand1 >= operand2;
-        },
-        opMod = function (operand1, operand2) {
-            return (operand1 % operand2) === 0;
-        },
-        opAnd = function (operand1, operand2) {
-            return operand1 && operand2;
-        },
-        opOr = function (operand1, operand2) {
-            return operand1 || operand2;
-        },
-        operate = function (operand1, operator, operand2) {
-            switch (operator) {
-            case '==':
-                return opEqual(operand1, operand2);
-            case '!=':
-                return opNotEqual(operand1, operand2);
-            case '<':
-                return opLesser(operand1, operand2);
-            case '>':
-                return opGreater(operand1, operand2);
-            case '<=':
-                return opLesserEqual(operand1, operand2);
-            case '>=':
-                return opGreaterEqual(operand1, operand2);
-            case '%':
-                return opMod(operand1, operand2);
-            case '&&':
-                return opAnd(operand1, operand2);
-            case '||':
-                return opOr(operand1, operand2);
-            }
-        },
         /**
          * Evaluates the plural statements to get the correct index in the array.
          * The plurality evaluation statement has to be coordinated with
@@ -173,15 +123,21 @@
          * On the other hand, if plural=(n==1), first cell should be "cat"
          * and second cell should be "cats".
          */
-        parsePlural = function (pluralForms, cardinality) {
-            var re = /^nplurals=[0-9];\s*plural=\(([n!=><%0-9]*)\)/i,
-                plural,
+        parsePlural = function (pluralForms, n) {
+            //n is used in eval()
+            var re = /^nplurals=[0-9];\s*plural=\(([n!=><(?:\s+\|\|\s+)(?:\s+&&\s+)%0-9]{3,})\)/i,
+                evalResult,
                 result = re.exec(pluralForms);
-            //get the part of the evaluation and determine
-            //the operation to execute
-            result = opDetect.exec(result[1]);
-            plural = operate(cardinality, result[1], parseInt(result[2], 10));
-            return plural ? 0 : 1;
+            if (result && result[1]) {
+                evalResult = eval(result[1]);
+                if (evalResult === true) {
+                    return 0;
+                }
+                if (evalResult === false) {
+                    return 1;
+                }
+            }
+            return 0;
         },
         getPlural = function (localization, position, this_val) {
             if (localization['&plurals']) {
@@ -233,7 +189,6 @@
                             plural = getPlural(localizations[locale], position, this_val);
                             return plural.replace('__n__', cardinality);
                         }
-                        //TODO check for more forms
                     }
                     if (localizations[locale][this_val]) {
                         return localizations[locale][this_val];
