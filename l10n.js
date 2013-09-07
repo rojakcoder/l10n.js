@@ -136,6 +136,7 @@
                 if (evalResult === false) {
                     return 1;
                 }
+                return evalResult;
             }
             return 0;
         },
@@ -152,7 +153,6 @@
             } else if (localization[this_val]) {
                 return localization[this_val];
             }
-            return this_val;
         },
         /**
          * The actual function called when calling toLocaleString.
@@ -182,23 +182,30 @@
                                 pluralForms.indexOf('nplurals=1') !== -1) {
                             //i.e. nplurals=1, use [0]
                             plural = getPlural(localizations[locale], 0, this_val);
-                            return plural.replace('__n__', cardinality);
+                            //only return if plural form is found
+                            if (plural) {
+                                return plural.replace('__n__', cardinality);
+                            }
                         }
                         if (pluralForms.indexOf('nplurals=2') !== -1) {
                             position = parsePlural(pluralForms, cardinality);
                             plural = getPlural(localizations[locale], position, this_val);
-                            return plural.replace('__n__', cardinality);
+                            //only return if plural form is found
+                            if (plural) {
+                                return plural.replace('__n__', cardinality);
+                            }
                         }
                     }
                     if (localizations[locale][this_val]) {
                         return localizations[locale][this_val];
                     }
                 }
+                //not returning anything will result in fallback
             } while (i-- > 1);
 
             if (!using_default && String.defaultLocale) {
                 use_default = true;
-                return localize.call(this_val);
+                return localize.call(this_val, cardinality);
             }
 
             return this_val;

@@ -12,13 +12,14 @@
     <script src="qunit.js"></script>
 </body>
 <script>
-var phrase1  = "%phrase1",      //in non-plural form only
+var phrase1  = "%phrase1",
     e1singular = 'There is a bear in the zoo.',
     e1plural = 'There are many bears in the zoo.',
     e1few = 'There are a few bears in the zoo.',
     e1many = 'There are many, many bears in the zoo.',
     e1dozen = 'There are dozens of bears in the zoo.',
-    e1quite = 'There are quite a number of bears in the zoo.';
+    e1quite = 'There are quite a number of bears in the zoo.',
+    e1neutral = '动物园里有很多只熊。';
 
 test('Inequality test', function () {
     String.toLocaleString({
@@ -267,6 +268,56 @@ test('Mod test with special treatment of 0', function () {
     equal(phrase1.toLocaleString(24), e1dozen,
         '24: Translated as "' + e1dozen + '".');
 });
+
+test('Equality test with array position specified.', function () {
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=2; plural=(n==1 ? 1 : 0)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are many bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There is a bear in the zoo.'
+                }
+            ]
+        }
+    });
+    String.locale = 'en';
+
+    equal(phrase1.toLocaleString(), e1plural,
+        'NULL: Translated as "' + e1plural + '" because plural form is default.');
+    equal(phrase1.toLocaleString(0), e1plural,
+        '0: Translated as "' + e1plural + '".');
+    equal(phrase1.toLocaleString(1), e1singular,
+        '1: Translated as "' + e1singular + '".');
+    equal(phrase1.toLocaleString(2), e1plural,
+        '2: Translated as "' + e1plural + '".');
+});
+
+test('No plural form test', function () {
+    String.toLocaleString({
+        'zh': {
+            '&plural-forms': 'nplurals=1; plural=0',
+            '&plurals': [
+                {
+                    '%phrase1': '动物园里有很多只熊。'
+                }
+            ]
+        }
+    });
+    String.locale = 'zh';
+
+    equal(phrase1.toLocaleString(), e1neutral,
+        'NULL: Translated as "' + e1neutral + '" because there is only 1 form.');
+    equal(phrase1.toLocaleString(0), e1neutral,
+        '0: Translated as "' + e1neutral + '" because there is only 1 form.');
+    equal(phrase1.toLocaleString(1), e1neutral,
+        '1: Translated as "' + e1neutral + '" because there is only 1 form.');
+    equal(phrase1.toLocaleString(2), e1neutral,
+        '2: Translated as "' + e1neutral + '" because there is only 1 form.');
+});
+
 </script>
 </html>
 
