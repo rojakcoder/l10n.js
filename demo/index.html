@@ -4,9 +4,24 @@
 <meta charset="utf-8" />
 <title>l10ns.js demo</title>
 <style type="text/css">
-body {
-	font-size: xx-large;
-	text-align: center;
+.output {
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid #eaeaf0;
+    background-color: #f9f9ff;
+    border-radius: 4px;
+    text-align: left;
+    color: #454545;
+}
+
+.code {
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid #eaeaea;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    text-align: left;
+    color: #454545;
 }
 </style>
 <script type="text/javascript" src="json2.js"></script>
@@ -14,30 +29,91 @@ body {
 <script type="text/javascript" src="localizations.js"></script>
 </head>
 <body>
-<h1 id="title">l10ns.js demo</h1>
-<p id="info">Your locale is unsupported.</p>
+<h1>l10ns.js Demo</h1>
+
+<p>Specify the locale and the number to use to determine the plurality
+of the form to use.</p>
+
+<div>
+    Locale:
+    <select id="locale">
+        <option value="en">en</option>
+        <option value="en-GB">en-GB</option>
+        <option value="zh">zh</option>
+    </select>
+    Number:
+    <input type="text" id="number" name="number" value="2" style="width: 3em;" />
+    <button id="localize">Localize</button>
+</div>
+
+<div class="output">
+    <div id="jsLocale"></div>
+    <div id="jsCall"></div>
+    <div><strong>
+        <span id="outputString" />
+    </strong></div>
+</div>
+
+<p>The string is localized using the structure below.</p>
+
+<pre class="code">
+    String.toLocaleString({
+      "en": {
+          "&amp;plural-forms": "nplurals=2; plural=(n!=1)",
+          "&amp;plurals": [
+              {
+                  "%phrase1": "The box measures __n__ meters in length."
+              },
+              {
+                  "%phrase1": "The box measures 1 meter in length."
+              }
+          ]
+      },
+      "en-GB": {
+          "&amp;plural-forms": "nplurals=2; plural=(n!=1)",
+          "&amp;plurals": [
+              {
+                  "%phrase1": "The box measures __n__ metres in length."
+              },
+              {
+                  "%phrase1": "The box measures 1 metre in length."
+              }
+          ]
+      },
+      "zh": {
+          "&amp;plural-forms": "nplurals=1; plural=0",
+          "&amp;plurals": [
+              {
+                  "%phrase1": "盒子有好几米长。"
+              }
+          ]
+      }
+    })
+</pre>
+
 <script type="text/javascript">
-if (location.hash) {
-	String.locale = location.hash.substr(1);	
+var localeEl = document.getElementById('locale'),
+    numberEl = document.getElementById('number'),
+    localizeEl = document.getElementById('localize'),
+    outputEl = document.getElementById('outputString'),
+    jsLocale = document.getElementById('jsLocale'),
+    jsCall = document.getElementById('jsCall'),
+    phrase = '%phrase1';
+
+function translate() {
+    var language = localeEl.options[localeEl.selectedIndex].value,
+        count = numberEl.value;
+
+    String.locale = language;
+    jsLocale.innerHTML = 'String.locale = ' + language;
+    jsCall.innerHTML = 'phrase.toLocaleString(' + count + ')';
+    outputEl.innerHTML = phrase.toLocaleString(count);
 }
 
-var localize = function (string, fallback) {
-	var localized = string.toLocaleString();
-	if (localized !== string) {
-		return localized;
-	} else {
-		return fallback;
-	}
-};
+localizeEl.onclick = translate;
 
-var info = document.getElementById("info").firstChild,
-title = document.getElementById("title").firstChild;
-
-info.nodeValue = localize("%info", info.nodeValue);
-document.title = title.nodeValue = localize("%title", title.nodeValue);
-document.documentElement.dir = localize("%locale.dir", document.documentElement.dir);
-
-document.documentElement.lang = String.locale || document.documentElement.lang;
+//display a value upon loading
+translate();
 </script>
 </body>
 </html>

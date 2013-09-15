@@ -1,259 +1,227 @@
-l10n.js
-=======
+l10ns.js
+========
 
-l10n.js is a JavaScript library that enables passive localization through native
-JavaScript methods, gracefully degrading if the library is not present. You can make
-Ajax applications, JavaScript libraries, etc. that can be localized but not require
-l10n.js to function. There is already a placeholder method for all API calls
-as specified in the ECMAScript specification and is present in all JavaScript
-engines, so when l10n.js isn't present, your application works fine.
+l10ns.js is a JavaScript library that enables localization and
+pluralization using the native `toLocaleString` method.
 
+l10n**s**.js is built from *l10n.js* - the fantastic work of Eli Grey
+(http://purl.eligrey.com).
 
-Demo
-----
-
-You can try out the [online demo][1] to see l10n.js in action.
-
-Currently the demo only supports the following locales.
-
-* [English](http://purl.eligrey.com/l10n.js/demo/en)
-    * [American English](http://purl.eligrey.com/l10n.js/demo/en-US)
-    * [British English](http://purl.eligrey.com/l10n.js/demo/en-GB)
-    * [Canadian English](http://purl.eligrey.com/l10n.js/demo/en-CA)
-    * [Australian English](http://purl.eligrey.com/l10n.js/demo/en-AU)
-* [Portuguese](http://purl.eligrey.com/l10n.js/demo/pt)
-* [Spanish](http://purl.eligrey.com/l10n.js/demo/es)
-* [French](http://purl.eligrey.com/l10n.js/demo/fr)
-* [Dutch](http://purl.eligrey.com/l10n.js/demo/nl)
-* [German](http://purl.eligrey.com/l10n.js/demo/de)
-* [Finnish](http://purl.eligrey.com/l10n.js/demo/fi)
-* [Vietnamese](http://purl.eligrey.com/l10n.js/demo/vi)
-* [Italian](http://purl.eligrey.com/l10n.js/demo/it)
-* [Norwegian](http://purl.eligrey.com/l10n.js/demo/no)
-* [Russian](http://purl.eligrey.com/l10n.js/demo/ru)
-* [Lojban](http://purl.eligrey.com/l10n.js/demo/jbo)
-* [Danish](http://purl.eligrey.com/l10n.js/demo/da)
-* [Hebrew](http://purl.eligrey.com/l10n.js/demo/he)
-* [Bulgarian](http://purl.eligrey.com/l10n.js/demo/bg)
-* [Simplified Chinese](http://purl.eligrey.com/l10n.js/demo/zh)
-* [Swedish](http://purl.eligrey.com/l10n.js/demo/se)
-* [Turkish](http://purl.eligrey.com/l10n.js/demo/tr)
-* [Hungarian](http://purl.eligrey.com/l10n.js/demo/hu)
-
-If you know a language that isn't currently supported in the demo, I encourage you to
-contribute a localization by sending me your own localizations, either [through GitHub][2]
-or [directly][3]. The following strings would need to be localized:
-
-* `%title` to `{Locale} - l10n.js demo` in the locale.
-* `%info` to `You are viewing a {locale} localization
-  of this page.` in the locale.
-* Optionally, `%locale.dir` to `rtl` if the locale uses right-to-left directionality.
-
-
-Supported Browsers
-------------------
-
-* Internet Explorer 5+
-* Firefox 2+
-* Opera 9+
-    * Doesn't support region-specific locales. Only gives "en" in the case of "en-US".
-* Google Chrome 1+
-* Safari 4+
-
-
-Getting Started
----------------
-
- 1. [Download l10n.js][4].
- 2. Localize strings used in your JavaScript application. See the [demo localizations
-    file][5] for an example localizations file. You can also specify external
-    localizations in your main localizations file by assigning a URL string to a language
-    code, such as `"en-us": "localizations/en-us.json"`.
- 3. Include the appropriate link elements, as described in the usage section, anywhere in
-    your document. I recommend putting it in the document's `<head>`.
- 4. Place `<script type="text/javascript" src="path/to/l10n.js"></script>`
-    anywhere after the `<link>` tag.
- 5. Call `toLocaleString()` on any strings you wish to localize.
-
+By itself, l10n.js facilitates the localization
+of the strings. l10n**s**.js modifies the code to add pluralization to
+the mix. It works in a similar way to l10n.js. In fact, it can be
+used in the same way that l10n.js is used. For more
+information on how to use the original l10n.js, please refer to
+[https://github.com/eligrey/l10n.js/](https://github.com/eligrey/l10n.js/).
 
 Usage
 -----
 
-### Localizing strings
+The recommendations by Eli such as using a
+[helper function](https://github.com/eligrey/l10n.js/#localizing-strings)
+and using
+[variable replacement](https://github.com/eligrey/l10n.js/#variable-replacement)
+are still valid, so I won't repeat them here.
 
-Calling `toLocaleString()` on every localizable string can create a lot of extra typing
-and bloat for sending your JavaScript down the wire. I recommend using the following
-helper function to localize strings. The reason I don't define this in l10n.js is to not
-introduce any new globals, which keeps l10n.js a one of the JavaScript libraries
-least-prone to conflicts with other libraries.
+The main difference between l10ns.js and l10n.js is that in l10ns.js, the
+`toLocaleString` method accepts an integer parameter that determines
+the plurality of the form to use.
 
-    var l = function (string) {
-        return string.toLocaleString();
-    };
+Begin by creating the JSON structure for the strings. Refer to 
+[Getting Started](https://github.com/eligrey/l10n.js#getting-started)
+for the various ways to localize your strings. Notice that there is a
+difference in the way that the JSON literal for l10n.js is structured
+compared to what l10ns.js uses.
 
-With this helper function, you can start writing `l("Your localizable string")` instead
-of `"Your localizable string".toLocaleString()`. I chose `l` instead of `_` (an
-underscore), because it's easier to spot so you can quickly skim your code to see which
-strings are localizable.
+The most straightforward way to initialise it is as below:
 
-
-### Variable replacement
-
-If you don't mind requiring l10n.js for your JavaScript application or library to
-function, I suggest using short variable strings instead of default strings. It saves
-bandwidth by decreasing the size of localization files, and it enables you to write
-nice, short code as such in the following.
-
-* `document.title = l("%title.search")`
-    * Example results: `"Seach - Acme, Inc."`
-* `confirm(l("%confirm.deleteAccount"))`
-    * Example results: `"Are you sure you want to delete your account?"`
-* `link.href = "http://www.google." + l("%locale.tld")`
-    * Example results: `"http://www.google.co.uk"` 
-
-Often, string concatenation is used instead of replacement in JavaScript. With l10n.js,
-to make localization easier, you may have to use replacements instead. You might want to
-use a JavaScript library that implements something similar to C++'s `sprintf()`. A nice
-JavaScript implementation I'd recommend is [php.js's `sprintf()`][6].
-
-
-### When localizations are downloaded
-
-If you are using single localization URLs
-(`<link rel="localization" hreflang="..." href="..." type="application/vnd.oftn.l10n+json"/>`),
-they will only be downloaded when needed. If you are using multiple localizations in one
-(`<link rel="localizations" href="..." type="application/vnd.oftn.l10n+json"/>`), then the file
-will be downloaded right away, but externally linked localizations in the localization
-file will not be. If you provide an interface for your users to change locales, any
-non-loaded localization files will be loaded when necessary.
-
-
-### Including localizations with link elements
-
-Multiple localizations can be included with one localization JSON file, with all of the
-top properties being language codes. Instead of putting all of the localized strings
-directly in the file, you may want to assign a specifc localization JSON URL to each
-locale, as to save bandwidth by only downloading locales the user needs.
-
-The following is an example localization file for
-`<link rel="localizations" href="path/to/localizations.json" type="application/vnd.oftn.l10n+json"/>`.
-
-    {
-      "en-US": {
-          "What is your favourite colour?": "What is your favorite color?"
+    String.toLocaleString({
+      "en": {
+          "&plural-forms": "nplurals=2; plural=(n!=1)",
+          "&plurals": [
+              {
+                  "%phrase1": "The box measures __n__ meters in length."
+              },
+              {
+                  "%phrase1": "The box measures 1 meter in length."
+              }
+          ]
       },
-      "fr": "path/to/french-localization.json"
-    }
+      "en-GB": {
+          "&plural-forms": "nplurals=2; plural=(n!=1)",
+          "&plurals": [
+              {
+                  "%phrase1": "The box measures __n__ metres in length."
+              },
+              {
+                  "%phrase1": "The box measures 1 metre in length."
+              }
+          ]
+      }
+    })
 
-Using localization files is the same as calling `String.toLocaleString()` witht the JSON
-localizations object as the first parameter.
+To use it with a British locale:
 
-You can also include single localizations by specifying the standard HTML5 `hreflang` link
-element attribute and using a rel of `localization` instead of `localizations` with an
-'s', as shown in the following.
+    String.locale = 'en-GB';
+    var a = '%phrase1';
+    a.toLocaleString(2);    //returns The box measures 2 metres in length.
+    a.toLocaleString(1);    //returns The box measures 1 metre in length.
 
-    <link rel="localization" hreflang="en-US" href="american-english.json" type="application/vnd.oftn.l10n+json"/>
+Explanation
+-----------
 
-The JSON file for the localization might look like the following.
+The JSON literal above sets a British specific locale and falls back to
+a US locale. It also describes the plural rules for both locales. Needless
+to say, only 10n**s**.js recognises the plural rules so this structure
+will not work for l10n.js.
 
-    {
-        "What is your favourite colour?": "What is your favorite color?"
-    }
+You can read the plural rules (the property `&plural-forms`) like 
+an `if` statement. Naturally, for both
+US and British English there are only two forms (`nplurals=2;`).
 
+Notice that the plural form of the strings is the first cell in the
+`&plurals` array while the singular form is in
+the second cell. The positioning of the forms is tightly coupled
+with how the plural rules are structured.
 
-API
----
+The rule for determining plurality (`plural=(n!=1)`) checks to see if the
+specified number is *not* equal to 1. If so, the statement returns true
+which implies position 0, and thus the localized string is retrieved from
+position 0. Otherwise, if the statement returns false, it implies position
+1 and that is where the strings are retrieved from.
 
-Strong and emphasized text has titles (which can be viewed by hovering your cursor over
-them) containing their type if they are not functions or return type if they are.
+The string `__n__` acts as a placeholder of which the actual number
+will be put in place when the string is localized. This is optional - you
+can have a plural form without a number.
 
+For example:
 
-### Methods
+    String.toLocaleString({
+      "en": {
+          "&plural-forms": "nplurals=2; plural=(n!=1)",
+          "&plurals": [
+              {
+                  "%phrase1": "The box measures several meters in length."
+              },
+              {
+                  "%phrase1": "The box measures 1 meter in length."
+              }
+          ]
+      }
+    })
 
-<dl>
-  <dt><code>String.<strong title="String">toLocaleString</strong>([<strong title="Object or String or Boolean">localizations</strong>])</code></dt>
-  <dd>
-    If <code title="Object">localizations</code> is an object, it is added to the
-    localizations.
-    <br />
-    If <code title="String">localizations</code> is a string, it is requested as JSON and
-    then added to the localizations.
-    <br />
-    If <code title="Boolean">localizations</code> is <code>false</code>, then all
-    localizations are reset.
-    <br />
-    If <code title="Object">localizations</code> is an object, and a locale is
-    <code>false</code>, then all localizations for that locale are reset.
-    <p>
-      The string representation of the <code>String</code> contructor is returned, to
-      maintain backwards compatibility with any code using this method to actually get it.
-    </p>
-    
-    <h4>Examples</h4>
-    <ul>
-      <li>
-        Loading a localizations JSON file:
-        <pre><code>String.toLocaleString(<strong title="String">"path/to/localizations.json"</strong>)</code></pre>
-      </li>
-      <li>
-        Defining localizations directly:
-        <p>
-          The nearest locale to the user's locale that has the string being localized is
-          used in localization.
-        </p>
-        <pre><code>String.toLocaleString({
-    "es": { // Spanish
-        "Hello, world!": "¡Hola, mundo!"
-        // more localizations...
-    },
-    "en-US": { // American English
-        "Hello, world!": "Hello, America!" // Locale-specific message
-        // more localizations...
-    },
-    "en-GB": false, // resetting British English localizations
-    // Specifying external localization JSON for Japanese:
-    // The URL isn't requested unless the user's locale is Japanese
-    "jp": "localizations/jp.json"
-})</code></pre>
-      </li>
-      <li>
-        Resetting all localizations:
-        <pre><code>String.toLocaleString(<strong title="Boolean">false</strong>)</code></pre>
-      </li>
-    </ul>
-  </dd>
-  
-  <dt><code>aString.<strong title="String">toLocaleString</strong>()</strong></code></dt>
-  <dd>
-    Returns the localized version of <code>aString</code> in the user's locale,
-    if available. Otherwise, it returns the same string.
-  </dd>
-</dl>
+    String.locale = 'en';
+    var a = '%phrase1';
+    a.toLocaleString(2);    //returns The box measures several meters in length.
 
+### Defaults
 
-### Fields
+It is also worth noting that strings in position 0 of the locale structure
+are the default. The default is used when no parameter is specified.
+For example:
 
-<dl>
-  <dt><code>String.<strong title="String">locale</strong></code></dt>
-  <dd>
-    A configurable string which represents the language code of the locale to use for
-    localization. It defaults to the user's own locale.
-  </dd>
-  <dt><code>String.<strong title="String">defaultLocale</strong></code></dt>
-  <dd>
-    A configurable string which represents the language code of the default locale to
-    use for localization if no localizations are available in the user's locale. By
-    default this is not configured, and may be ignored if you are using l10n.js for
-    passive-only localizations.
-  </dd>
-</dl>
+    String.toLocaleString({
+      "en": {
+          "&plural-forms": "nplurals=2; plural=(n!=1)",
+          "&plurals": [
+              {
+                  "%phrase1": "The box measures several meters in length."
+              },
+              {
+                  "%phrase1": "The box measures 1 meter in length."
+              }
+          ]
+      }
+    })
 
+    String.locale = 'en';
+    var a = '%phrase1';
+    //no number specified as the parameter
+    a.toLocaleString();    //returns The box measures several meters in length.
 
-![Tracking image](https://in.getclicky.com/212712ns.gif)
+### Other plural forms
 
-  [1]: http://purl.eligrey.com/l10n.js/demo
-  [2]: https://github.com/eligrey/l10n.js/edit/master/demo/localizations.js
-  [3]: http://purl.eligrey.com/contact
-  [4]: http://purl.eligrey.com/github/l10n.js/raw/master/l10n.js
-  [5]: http://purl.eligrey.com/github/l10n.js/blob/master/demo/localizations.js
-  [6]: http://phpjs.org/functions/sprintf
+To create other plural forms, you need to modify both the `&plural-forms`
+property and the array in `&plurals`.
+
+The plural rules are evaluated using the `eval` statement (I know, I know. I'm
+a bad person for using `eval`). BUT, it is the fastest way to evaluate the
+rule without having to rewrite an entire logic parsing library again.
+Furthermore, the rule is first checked to only contain the characters expected
+in a rule before running it through `eval` i.e. the rule will only be
+executed only if it contains the following characters:
+
+- n
+- !
+- =
+- %
+- &gt;
+- &lt;
+- ||
+- &&
+- 0 to 9
+
+If you need to know, the regular expression for checking is as follows:
+
+    [n!=&gt;&lt;(?:\s+\|\|\s+)(?:\s+&&\s+)%0-9]
+
+#### 1 Form Only
+
+This is for languages that do not have any plural forms. An example is
+Chinese.
+
+    String.toLocaleString({
+      "zh": {
+          "&plural-forms": "nplurals=1; plural=0",
+          "&plurals": [
+              {
+                  "%phrase1": "盒子有好几米长。"
+              }
+          ]
+      }
+    })
+
+#### More than 2 Forms
+
+For languages with plurality more than 2 forms, the plural rule should
+return integers that designate the position to return in the cell.
+
+I don't know any languages that have more than 2 forms so I will use
+an example in English (P.S. if you know of any language that uses more
+than 2 forms, please let me know and I can update the example):
+
+    String.toLocaleString({
+      "en": {
+          "&plural-forms": "nplurals=3; plural=(n!=1 ? n!=12 ? 0 : 1 : 2)",
+          "&plurals": [
+              {
+                  "%phrase1": "The box measures several meters in length."
+              },
+              {
+                  "%phrase1": "The box measures dozens of meters in length."
+              },
+              {
+                  "%phrase1": "The box measures 1 meter in length."
+              }
+          ]
+      }
+    })
+
+Forming the right plural rule is basically getting the right ternary
+statements nested within each other correctly.
+
+In this implementation, the `plural` statement **cannot** have nested
+parentheses. In other words, a statement like the following cannot
+be evaluated:
+
+    "&plural-forms": "nplurals=3; plural=(n!=1 ? (n!=12 ? 0 : 1) : 2)",
+
+Help (Problems, Bugs & Fixes)
+=============================
+
+If there is anything wrong with the library or if there are bugs, please
+email me or ping me on
+[Google Plus](https://plus.google.com/u/0/111698875815737915836/posts).
+I can't promise I'll fix it due to my busy schedule, but at least it'll
+be on my radar.
+
