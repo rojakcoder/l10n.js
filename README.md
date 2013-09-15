@@ -4,15 +4,22 @@ l10ns.js
 l10ns.js is a JavaScript library that enables localization and
 pluralization using the native `toLocaleString` method.
 
-l10n**s**.js is built from *l10n.js* - the fantastic work of Eli Grey
+**l10ns.js** is built from *l10n.js* - the fantastic work of Eli Grey
 (http://purl.eligrey.com).
 
 By itself, l10n.js facilitates the localization
-of the strings. l10n**s**.js modifies the code to add pluralization to
+of the strings. l10ns.js is an improvement that adds pluralization to
 the mix. It works in a similar way to l10n.js. In fact, it can be
 used in the same way that l10n.js is used. For more
 information on how to use the original l10n.js, please refer to
 [https://github.com/eligrey/l10n.js/](https://github.com/eligrey/l10n.js/).
+
+Demo
+----
+
+Check out the
+[demonstration](https://googledrive.com/host/0B7W1L5FZLTOWOVNUcUt5U2pHU3M/index.html)
+to see l10ns.js in action.
 
 Usage
 -----
@@ -24,7 +31,7 @@ and using
 are still valid, so I won't repeat them here.
 
 The main difference between l10ns.js and l10n.js is that in l10ns.js, the
-`toLocaleString` method accepts an integer parameter that determines
+`toLocaleString` method accepts an optional integer parameter that determines
 the plurality of the form to use.
 
 Begin by creating the JSON structure for the strings. Refer to 
@@ -72,7 +79,7 @@ Explanation
 
 The JSON literal above sets a British specific locale and falls back to
 a US locale. It also describes the plural rules for both locales. Needless
-to say, only 10n**s**.js recognises the plural rules so this structure
+to say, only 10ns.js recognises the plural rules so this structure
 will not work for l10n.js.
 
 You can read the plural rules (the property `&plural-forms`) like 
