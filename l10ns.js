@@ -178,21 +178,34 @@
                 if (localizations[locale]) {
                     pluralForms = localizations[locale]['&plural-forms'];
                     if (pluralForms) {
-                        if (cardinality === null || cardinality === undefined ||
-                                pluralForms.indexOf('nplurals=1') !== -1) {
-                            //i.e. nplurals=1, use [0]
-                            plural = getPlural(localizations[locale], 0, this_val);
-                            //only return if plural form is found
-                            if (plural) {
-                                return plural.replace('__n__', cardinality);
+                        if (typeof pluralForms === 'function') {
+                            if (cardinality === null || cardinality === undefined) {
+                                position = 0;
+                            } else {
+                                position = pluralForms(cardinality);
                             }
-                        }
-                        if (pluralForms.indexOf('nplurals=2') !== -1) {
-                            position = parsePlural(pluralForms, cardinality);
                             plural = getPlural(localizations[locale], position, this_val);
                             //only return if plural form is found
                             if (plural) {
                                 return plural.replace('__n__', cardinality);
+                            }
+                        } else {
+                            if (cardinality === null || cardinality === undefined ||
+                                    pluralForms.indexOf('nplurals=1') !== -1) {
+                                //i.e. nplurals=1, use [0]
+                                plural = getPlural(localizations[locale], 0, this_val);
+                                //only return if plural form is found
+                                if (plural) {
+                                    return plural.replace('__n__', cardinality);
+                                }
+                            }
+                            if (pluralForms.indexOf('nplurals=2') !== -1) {
+                                position = parsePlural(pluralForms, cardinality);
+                                plural = getPlural(localizations[locale], position, this_val);
+                                //only return if plural form is found
+                                if (plural) {
+                                    return plural.replace('__n__', cardinality);
+                                }
                             }
                         }
                     }

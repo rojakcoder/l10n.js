@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Model Test</title>
+<link rel="stylesheet" href="qunit.css">
+<script src="qunit.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<!-- Begin page content -->
+		<div class="container">
+			<div class="page-header">
+				<h3>Qunit Testing For l10ns.js</h3>
+                <p><em>Assumes default user locale is 'en-US'. This
+            has to be set in order for the tests to pass.</em></p>
+			</div>
+			<h4 id="qunit-header">Consolidated Tests (executed in sequence)</h4>
+			<h6 id="qunit-banner"></h6>
+			<div id="qunit-testrunner-toolbar"></div>
+			<h6 id="qunit-userAgent"></h6>
+			<ol id="qunit-tests"></ol>
+			<div id="qunit-fixture"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	//All tests must be run in sequence.
+    QUnit.config.reorder = false;
+	</script>
+    <script src="../l10ns.js"></script>
+	<script type="text/javascript" src="locale-no.js" charset="utf-8"></script>
+	<script type="text/javascript" src="locale-one.js" charset="utf-8"></script>
+	<script type="text/javascript" src="locale-two.js" charset="utf-8"></script>
+	<script type="text/javascript" src="locale-three.js" charset="utf-8"></script>
+	<script type="text/javascript" src="locale-four.js" charset="utf-8"></script>
+	<script type="text/javascript" src="plural-one.js" charset="utf-8"></script>
+	<script type="text/javascript" src="plural-operator.js" charset="utf-8"></script>
+	<script type="text/javascript" src="plural-language-fallback.js" charset="utf-8"></script>
+	<script type="text/javascript" src="plural-region-fallback.js" charset="utf-8"></script>
+	<script type="text/javascript" src="func-plural-one.js" charset="utf-8"></script>
+	<script type="text/javascript" src="func-plural-operator.js" charset="utf-8"></script>
+	<script type="text/javascript" src="func-plural-language-fallback.js" charset="utf-8"></script>
+	<script type="text/javascript" src="func-plural-region-fallback.js" charset="utf-8"></script>
+</body>
+</html>

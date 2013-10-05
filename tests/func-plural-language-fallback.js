@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>One Locale Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
+(function () {
 var phrase1 = "%all",
     phrase2 = "%noZhTw",
     phrase3 = "%noZh",
@@ -23,10 +10,17 @@ var phrase1 = "%all",
     p5 = 'The neighborhood is very friendly.',
     p6 = 'The neighborhoods are very friendly.';
 
-test('en, en-GB, zh & zh-TW: default', function () {
+test('(Using functions for plural-forms) en, en-GB, zh & zh-TW: default', function () {
+    //reset to default
+    String.defaultLocale = "";
+    String.locale = (navigator && (navigator.language || navigator.userLanguage)) || "";
+    String.toLocaleString(false);
+
     String.toLocaleString({
         'en': {
-            '&plural-forms': 'nplurals=2; plural=(n!=1)',
+            '&plural-forms': function (n) {
+                return (n !== 1) ? 0 : 1
+            },
             '&plurals': [
                 {
                     '%all':         'The neighborhoods are very friendly.',
@@ -43,7 +37,9 @@ test('en, en-GB, zh & zh-TW: default', function () {
             ]
         },
         'en-GB': {
-            '&plural-forms': 'nplurals=2; plural=(n!=1)',
+            '&plural-forms': function (n) {
+                return (n !== 1) ? 0 : 1;
+            },
             '&plurals': [
                 {
                     '%all':         'The neighbourhoods are very friendly.',
@@ -58,7 +54,9 @@ test('en, en-GB, zh & zh-TW: default', function () {
             ]
         },
         'zh': {
-            '&plural-forms': 'nplurals=1; plural=0',
+            '&plural-forms': function (n) {
+                return 0;
+            },
             '&plurals': [
                 {
                     '%all':         '友善的邻里。',
@@ -113,7 +111,7 @@ test('en, en-GB, zh & zh-TW: default', function () {
         '2: Translated as "' + p6 + '" because of implicit default.');
 });
 
-test('en, en-GB, zh & zh-TW: zh-TW', function () {
+test('(Using functions for plural-forms) en, en-GB, zh & zh-TW: zh-TW', function () {
     String.locale = 'zh-TW';
 
     equal(phrase1.toLocaleString(), p1,
@@ -153,7 +151,7 @@ test('en, en-GB, zh & zh-TW: zh-TW', function () {
         '2: Translated as "' + phrase4 + '" because no default.');
 });
 
-test('en, en-GB, zh & zh-TW: zh-TW with en-GB default', function () {
+test('(Using functions for plural-forms) en, en-GB, zh & zh-TW: zh-TW with en-GB default', function () {
     String.defaultLocale = 'en-GB';
     String.locale = 'zh-TW';
 
@@ -193,7 +191,5 @@ test('en, en-GB, zh & zh-TW: zh-TW with en-GB default', function () {
     equal(phrase4.toLocaleString(2), p6,
         '2: Translated as "' + p6 + '" because of default & region fallback.');
 });
-
-</script>
-</html>
+})();
 

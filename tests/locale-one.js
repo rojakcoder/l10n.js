@@ -1,17 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>One Locale Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
 test('1 locale (default)', function () {
     var input = "There is 1 book on the shelf.",
         inputVar = '%sentence',
@@ -48,6 +34,4 @@ test('1 locale (specified)', function () {
     equal(inputVar.toLocaleString(), expected,
         'Translation with variable successful.');
 });
-</script>
-</html>
 

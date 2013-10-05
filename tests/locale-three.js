@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Three Locales Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
+(function () {
 var phrase6  = "%phrase6",      //different in EN,  in ZH
     phrase7  = "%phrase7",      //same in EN,       in ZH
     phrase8  = "%phrase8",      //not in EN-GB,     in ZH
@@ -44,6 +31,11 @@ var phrase6  = "%phrase6",      //different in EN,  in ZH
     e20zhTw  = '你愛打羽毛球嗎？';
 
 test('3 locales (default)', function () {
+    //reset to default
+    String.defaultLocale = "";
+    String.locale = (navigator && (navigator.language || navigator.userLanguage)) || "";
+    String.toLocaleString(false);
+
     String.toLocaleString({
         'en': {
             '%phrase6':  'Ice cream flavor',
@@ -270,6 +262,5 @@ test('EN-GB specified, ZH default', function () {
     equal(phrase20.toLocaleString(), phrase20,
         'phrase 20 not translated - not in en & zh.');
 });
-</script>
-</html>
+})();
 

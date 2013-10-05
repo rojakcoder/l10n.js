@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>One Locale Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
+(function () {
 var phrase1  = "%phrase1",
     e1singular = 'There is a bear in the zoo.',
     e1plural = 'There are many bears in the zoo.',
@@ -19,6 +6,7 @@ var phrase1  = "%phrase1",
     e1many = 'There are many, many bears in the zoo.',
     e1dozen = 'There are dozens of bears in the zoo.',
     e1quite = 'There are quite a number of bears in the zoo.',
+    e1none = 'There are no bears in the zoo.',
     e1neutral = '动物园里有很多只熊。';
 
 test('Inequality test', function () {
@@ -269,6 +257,35 @@ test('Mod test with special treatment of 0', function () {
         '24: Translated as "' + e1dozen + '".');
 });
 
+test('Test with three forms, single operation', function () {
+    String.toLocaleString({
+        'en': {
+            '&plural-forms': 'nplurals=3; plural=(n>1 ? 0 : n==1 ? 1 : 2)',
+            '&plurals': [
+                {
+                    '%phrase1': 'There are many bears in the zoo.'
+                },
+                {
+                    '%phrase1': 'There is a bear in the zoo.'
+                },
+                {
+                    '%phrase1': 'There are no bears in the zoo.'
+                }
+            ]
+        }
+    });
+    String.locale = 'en';
+
+    equal(phrase1.toLocaleString(), e1plural,
+        'NULL: Translated as "' + e1plural + '" because there 1st form is default.');
+    notEqual(phrase1.toLocaleString(0), e1none,
+        '0: Translated as "' + phrase1.toLocaleString(0) + '" - ONLY SUPPORTS 2 FORMS NOW.');
+    notEqual(phrase1.toLocaleString(1), e1singular,
+        '1: Translated as "' + phrase1.toLocaleString(1) + '" - ONLY SUPPORTS 2 FORMS NOW.');
+    notEqual(phrase1.toLocaleString(2), e1plural,
+        '2: Translated as "' + phrase1.toLocaleString(2) + '" - ONLY SUPPORTS 2 FORMS NOW.');
+});
+
 test('Equality test with array position specified.', function () {
     String.toLocaleString({
         'en': {
@@ -317,7 +334,5 @@ test('No plural form test', function () {
     equal(phrase1.toLocaleString(2), e1neutral,
         '2: Translated as "' + e1neutral + '" because there is only 1 form.');
 });
-
-</script>
-</html>
+})();
 

@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Four Locales Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
+(function () {
 var phrase1  = "%phrase1",      //different in EN,  different in ZH
     phrase2  = "%phrase2",      //same in EN,       different in ZH
     phrase3  = "%phrase3",      //not in EN-GB,     different in ZH
@@ -90,6 +77,11 @@ var phrase1  = "%phrase1",      //different in EN,  different in ZH
     e25enzh  = null;
 
 test('4 locales (default)', function () {
+    //reset to default
+    String.defaultLocale = "";
+    String.locale = (navigator && (navigator.language || navigator.userLanguage)) || "";
+    String.toLocaleString(false);
+
     String.toLocaleString({
         'en': {
             '%phrase1':  'Peace and harmony in the neighborhood.',
@@ -880,6 +872,5 @@ test('EN-GB specified, ZH-TW default', function () {
     equal(phrase25.toLocaleString(), phrase25,
         'phrase 25 not translated - not in zh & en.');
 });
-</script>
-</html>
+})();
 

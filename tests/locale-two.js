@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Two Locales Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
+(function () {
 test('2 locales (default)', function () {
     var input = "There is 1 book on the shelf.",
         inputVar = '%sentence',
@@ -97,6 +84,5 @@ test('2 locales (ZH specified, EN default)', function () {
     equal(inputVar1.toLocaleString(), expectedEn1,
         'Locale not available - using fallback.');
 });
-</script>
-</html>
+})();
 

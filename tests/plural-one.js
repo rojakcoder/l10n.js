@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>One Locale Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
+(function () {
 var phrase1  = "%phrase1",      //in non-plural form only
     phrase2  = '%phrase2',      //in singular form only, no fallback
     phrase3  = '%phrase3',      //in plural form only, no fallback
@@ -42,7 +29,12 @@ var phrase1  = "%phrase1",      //in non-plural form only
     e7singular = 'Impossibility',
     e7plural   = 'Impossibilities';
      
-test('1 locale (default)', function () {
+test('1 plural locale (default)', function () {
+    //reset to default
+    String.defaultLocale = "";
+    String.locale = (navigator && (navigator.language || navigator.userLanguage)) || "";
+    String.toLocaleString(false);
+
     String.toLocaleString({
         'en': {
             '%phrase1': 'Peace and harmony in the neighborhood.',
@@ -76,7 +68,7 @@ test('1 locale (default)', function () {
         '2: Translated as "' + e0noPlural + '" because of fallback.');
 });
 
-test('1 locale (specified)', function () {
+test('1 plural locale (specified)', function () {
     String.toLocaleString({
         'en': {
             '%phrase1': 'Peace and harmony in the neighborhood.',
@@ -159,6 +151,5 @@ test('1 locale (specified)', function () {
     equal(phrase7.toLocaleString(0), e7plural,
         '0: Translated as "' + e7plural + '".');
 });
-</script>
-</html>
+})();
 

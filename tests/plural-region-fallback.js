@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>One Locale Test</title>
-    <link rel="stylesheet" href="qunit.css">
-</head>
-<body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="../l10ns.js"></script>
-    <script src="qunit.js"></script>
-</body>
-<script>
+(function () {
 var phrase1  = "%phrase1",
     e1allSingular = 'The neighbourhood is very friendly.',
     e1allPlural = 'The neighbourhoods are very friendly.',
@@ -130,7 +117,5 @@ test('en & en-GB: en-GB specified', function () {
     equal(phrase1.toLocaleString(2), e1usPlural,
         '2: Translated as "' + e1usPlural + '" because of region fallback.');
 });
-
-</script>
-</html>
+})();
 
