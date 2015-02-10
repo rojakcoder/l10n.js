@@ -123,7 +123,7 @@
          * On the other hand, if plural=(n==1), first cell should be "cat"
          * and second cell should be "cats".
          */
-        parsePlural = function (pluralForms, n) {
+        parsePlural = function (pluralForms) {
             //n is used in eval()
             var re = /^nplurals=[0-9];\s*plural=\(([n!=><(?:\s+\|\|\s+)(?:\s+&&\s+)%0-9]{3,})\)/i,
                 evalResult,
@@ -200,7 +200,7 @@
                                 }
                             }
                             if (pluralForms.indexOf('nplurals=2') !== -1) {
-                                position = parsePlural(pluralForms, cardinality);
+                                position = parsePlural(pluralForms);
                                 plural = getPlural(localizations[locale], position, this_val);
                                 //only return if plural form is found
                                 if (plural) {
