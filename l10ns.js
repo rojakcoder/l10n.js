@@ -1,6 +1,6 @@
+/*! l10n.js v1.0.0 */
 /*
  * l10n.js
- * 2013-04-18
  * 
  * Adapted with pluralization by Chua Chee How. http://rojakcoder.com
  * By Eli Grey, http://eligrey.com
